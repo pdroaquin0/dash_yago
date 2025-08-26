@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Espanca Tubarão</title>
+  <link rel="icon" type="image/png" href="casa.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      width: 100%;
+      overflow: hidden;
+      background: #f5f5f5;
+    }
+    #container {
+      position: relative;
+      width: 100%;
+      height: 100%;
+    }
+    iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      transition: opacity 0.5s ease-in-out;
+      transform-origin: 0 0;
+    }
+    .hidden {
+      opacity: 0;
+    }
+    /* Botão de atualizar */
+    #refreshBtn {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      z-index: 10;
+      padding: 10px 15px;
+      border: none;
+      border-radius: 8px;
+      background: #0078d7;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+      box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+      transition: background 0.3s;
+    }
+    #refreshBtn:hover {
+      background: #005fa3;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="container">
+    <button id="refreshBtn">🔄 Atualizar</button>
+    <iframe 
+      id="dashFrame"
+      title="DASHBOARD - YAGO"
+      src="https://app.powerbi.com/view?r=eyJrIjoiYjI2NTk2ZWItMjBjYy00ZmY0LTkxNWUtN2MyN2ZlZGY2ZDFmIiwidCI6ImM3NGViY2JkLWE4MGYtNDYwYy1hMDUzLTEwZDViNmY1ZWQwNSJ9"
+      allowFullScreen="true">
+    </iframe>
+  </div>
+
+  <script>
+    const iframe = document.getElementById("dashFrame");
+    const refreshBtn = document.getElementById("refreshBtn");
+    const refreshInterval = 5 * 60 * 1000; // 5 minutos
+
+    // Atualização automática
+    setInterval(() => {
+      reloadIframe();
+    }, refreshInterval);
+
+    // Atualização manual
+    refreshBtn.addEventListener("click", () => {
+      reloadIframe();
+    });
+
+    function reloadIframe() {
+      iframe.classList.add("hidden"); // fade-out
+      setTimeout(() => {
+        iframe.src = iframe.src; // recarrega
+        iframe.classList.remove("hidden"); // fade-in
+      }, 500);
+    }
+
+    // Ajuste automático de zoom conforme tela
+    function adjustZoom() {
+      const scaleX = window.innerWidth / iframe.offsetWidth;
+      const scaleY = window.innerHeight / iframe.offsetHeight;
+      const scale = Math.min(scaleX, scaleY); 
+      iframe.style.transform = `scale(${scale})`;
+    }
+
+    window.addEventListener("resize", adjustZoom);
+    window.addEventListener("load", adjustZoom);
+  </script>
+
+</body>
+</html>
